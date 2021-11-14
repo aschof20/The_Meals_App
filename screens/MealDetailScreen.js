@@ -5,6 +5,7 @@ const MealDetailScreen = props => {
     return (
         <View style={styles.screen}>
             <Text>The Meal Detail Screen Screen</Text>
+            
         </View>
     )
 }
