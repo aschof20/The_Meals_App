@@ -1,14 +1,17 @@
-import { createAppContainer } from 'react-navigation'
-import {createBottomTabNavigator} from 'react-navigation-tabs'
-import { createStackNavigator } from 'react-navigation-stack'
-import CategoriesScreen from '../screens/CategoriesScreen'
-import CategoryMealScreen from '../screens/CategoryMealScreen'
-import MealDetailScreen from '../screens/MealDetailScreen'
-import FavoritesScreen from "../screens/FavoritesScreen"
+import { createAppContainer } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
+import { Ionicons } from '@expo/vector-icons';
+import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
 
-import Colors from '../constants/Colors'
-import { Platform } from 'react-native'
+import CategoriesScreen from '../screens/CategoriesScreen';
+import CategoryMealScreen from '../screens/CategoryMealScreen';
+import MealDetailScreen from '../screens/MealDetailScreen';
+import FavoritesScreen from "../screens/FavoritesScreen";
 
+import Colors from '../constants/Colors';
+import React from 'react';
+import { Platform } from 'react-native';
 
 /**
  * Telling the app which screens that will be able to be moved between in the stack
@@ -35,17 +38,41 @@ const MealsNavigator = createStackNavigator(
         Platform.OS === 'android' ? 'white' : Colors.primaryColor,
     },
   },
-)
+);
 
-const MealsFavTabNavigator = createBottomTabNavigator(
-  {
-    Meals: MealsNavigator,
-    Favorites: FavoritesScreen
+const tabScreenConfig = {
+  Meals: {
+    screen: MealsNavigator,
+    navigationOptions: {
+      tabBarLabel: 'Meals',
+      tabBarIcon: (tabInfo) => {
+        return <Ionicons name='ios-restaurant' size={25} color={tabInfo.tintColor} />;
+      }, tabBarColor: Colors.primaryColor
+    }
+  },
+  Favorites: {
+    tabBarLabel: 'Favourites',
+    screen: FavoritesScreen,
+    navigationOptions: {
+      tabBarIcon: (tabInfo) => { return <Ionicons name='ios-star' size={25} color={tabInfo.tintColor} />; }
+
+    }, tabBarColor: Colors.accentColor
   }
-)
+
+};
+
+const MealsFavTabNavigator = Platform.OS === 'android' ? createMaterialBottomTabNavigator(tabScreenConfig, {
+  activeTintColor: 'white', shifting: true
+}) : createBottomTabNavigator(tabScreenConfig,
+  {
+    tabBarOptions: {
+      activeTintColor: Colors.accentColor
+    }
+  }
+);
 
 
 
-export default createAppContainer(MealsFavTabNavigator)
+export default createAppContainer(MealsFavTabNavigator);;
 
 // defaultNavigationoptions are overridden by specificly defined options for respective elements in the stack
