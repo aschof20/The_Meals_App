@@ -13,6 +13,21 @@ import Colors from '../constants/Colors';
 import React from 'react';
 import { Platform } from 'react-native';
 
+const defaultStackNavOptions = {
+  //mode: 'modal' // Screen slides in from the bottom of the screen
+  mode: 'card', // Default - slide in from right
+
+  defaultNavigationOptions: {
+    headerStyle: {
+      backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : '',
+    },
+    headerTintColor:
+      Platform.OS === 'android' ? 'white' : Colors.primaryColor,
+  },
+};
+
+
+
 /**
  * Telling the app which screens that will be able to be moved between in the stack
  */
@@ -30,15 +45,20 @@ const MealsNavigator = createStackNavigator(
     //mode: 'modal' // Screen slides in from the bottom of the screen
     mode: 'card', // Default - slide in from right
 
-    defaultNavigationOptions: {
-      headerStyle: {
-        backgroundColor: Platform.OS === 'android' ? Colors.primaryColor : '',
-      },
-      headerTintColor:
-        Platform.OS === 'android' ? 'white' : Colors.primaryColor,
-    },
+    defaultNavigationOptions: defaultStackNavOptions
   },
 );
+
+const FavNavigator = createStackNavigator({
+  Favorites: FavoritesScreen,
+  MealDetail: MealDetailScreen,
+
+}, {
+  //mode: 'modal' // Screen slides in from the bottom of the screen
+  mode: 'card', // Default - slide in from right
+
+  defaultNavigationOptions: defaultStackNavOptions
+});
 
 const tabScreenConfig = {
   Meals: {
@@ -52,7 +72,7 @@ const tabScreenConfig = {
   },
   Favorites: {
     tabBarLabel: 'Favourites',
-    screen: FavoritesScreen,
+    screen: FavNavigator,
     navigationOptions: {
       tabBarIcon: (tabInfo) => { return <Ionicons name='ios-star' size={25} color={tabInfo.tintColor} />; }
 
