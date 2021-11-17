@@ -3,11 +3,13 @@ import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { createStackNavigator } from 'react-navigation-stack';
 import { Ionicons } from '@expo/vector-icons';
 import { createMaterialBottomTabNavigator } from "react-navigation-material-bottom-tabs";
+import { createDrawerNavigator } from 'react-navigation-drawer';
 
 import CategoriesScreen from '../screens/CategoriesScreen';
 import CategoryMealScreen from '../screens/CategoryMealScreen';
 import MealDetailScreen from '../screens/MealDetailScreen';
 import FavoritesScreen from "../screens/FavoritesScreen";
+import FiltersScreen from "../screens/FiltersScreen";
 
 import Colors from '../constants/Colors';
 import React from 'react';
@@ -35,7 +37,9 @@ const MealsNavigator = createStackNavigator(
   {
     // Configure the screens we want to navigate between
     // Mapping the screens
-    Categories: { screen: CategoriesScreen, navigationOptions: {} },
+    Categories: {
+      screen: CategoriesScreen, navigationOptions: {}
+    },
     CategoryMeals: {
       screen: CategoryMealScreen,
     },
@@ -81,18 +85,29 @@ const tabScreenConfig = {
 
 };
 
-const MealsFavTabNavigator = Platform.OS === 'android' ? createMaterialBottomTabNavigator(tabScreenConfig, {
-  activeTintColor: 'white', shifting: true
-}) : createBottomTabNavigator(tabScreenConfig,
-  {
-    tabBarOptions: {
-      activeTintColor: Colors.accentColor
+const MealsFavTabNavigator = Platform.OS === 'android'
+  ? createMaterialBottomTabNavigator(tabScreenConfig, {
+    activeTintColor: 'white', shifting: true
+  }) : createBottomTabNavigator(tabScreenConfig,
+    {
+      tabBarOptions: {
+        activeTintColor: Colors.accentColor
+      }
     }
-  }
-);
+  );
+
+const FiltersNavigator = createStackNavigator({
+  Filters: FiltersScreen
+});
+
+const MainNavigator = createDrawerNavigator({
+  // COnfigure the screens
+  MealsFav: MealsFavTabNavigator,
+  Filters: FiltersNavigator
+});
 
 
 
-export default createAppContainer(MealsFavTabNavigator);;
+export default createAppContainer(MainNavigator);;
 
 // defaultNavigationoptions are overridden by specificly defined options for respective elements in the stack
