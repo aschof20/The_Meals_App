@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { View, Image, Text, StyleSheet, ScrollView } from 'react-native';
 
 import { useSelector } from 'react-redux';
@@ -22,6 +22,13 @@ const MealDetailScreen = (props) => {
   const mealId = props.navigation.getParam('mealId');
 
   const selectedMeal = availableMeals.find((meal) => meal.id === mealId);
+
+  // When selectedMeal changes the updated information is sent to the header
+  /*  useEffect(() => {
+     props.navigation.setParams({ mealTitle: selectedMeal });
+ 
+   }, [selectedMeal]); */
+
   return (
     <ScrollView>
       <Image source={{ uri: selectedMeal.imageUrl }} style={styles.image} />
@@ -46,10 +53,13 @@ const MealDetailScreen = (props) => {
 
 MealDetailScreen.navigationOptions = (navigationData) => {
   const mealId = navigationData.navigation.getParam('mealId');
-  const selectedMeal = MEALS.find((meal) => meal.id === mealId);
+
+  const mealTitle = navigationData.navigation.getParam('mealTitle');
+
+  //const selectedMeal = meal.find((meal) => meal.id === mealId);
 
   return {
-    headerTitle: selectedMeal.title,
+    headerTitle: mealTitle,
     headerRight: () => (
       <HeaderButtons HeaderButtonComponent={HeaderButton}>
         <Item
