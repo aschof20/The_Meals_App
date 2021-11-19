@@ -1,22 +1,33 @@
-import { StatusBar } from 'expo-status-bar'
-import React, { useState } from 'react'
-import { StyleSheet, Text, View } from 'react-native'
-import * as Font from 'expo-font'
-import AppLoading from 'expo-app-loading'
-import MealsNavigator from './navigation/MealsNavigator'
-import { useScreens } from 'react-native-screens'
+import { StatusBar } from 'expo-status-bar';
+import React, { useState } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import * as Font from 'expo-font';
+import AppLoading from 'expo-app-loading';
+import MealsNavigator from './navigation/MealsNavigator';
+import { useScreens } from 'react-native-screens';
+import { createStore, combineReducers } from 'redux';
+import mealsReducer from './store/reducers/meals';
+import { Provider } from 'react-redux';
 
 //useScreens()
+
+
+const rootReducer = combineReducers({
+  meals: mealsReducer
+});
+
+const store = createStore(rootReducer);
+
 
 const fetchFonts = () => {
   return Font.loadAsync({
     'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
     'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
-  })
-}
+  });
+};
 
 export default function App() {
-  const [fontLoaded, setFontLoaded] = useState(false)
+  const [fontLoaded, setFontLoaded] = useState(false);
 
   if (!fontLoaded) {
     return (
@@ -25,9 +36,9 @@ export default function App() {
         onFinish={() => setFontLoaded(true)}
         onError={(err) => console.log(err)}
       />
-    )
+    );
   }
-  return <MealsNavigator />
+  return <Provider store={store}><MealsNavigator /></Provider>;
 }
 
 const styles = StyleSheet.create({
@@ -37,4 +48,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-})
+});
