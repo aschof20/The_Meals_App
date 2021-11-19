@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import { View, Image, Text, StyleSheet, ScrollView } from 'react-native';
 
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { HeaderButtons, Item } from 'react-navigation-header-buttons';
 import HeaderButton from '../components/HeaderButton';
 import DefaultText from '../components/DefaultText';
-
+import { toggleFavorite } from '../store/actions/meals';
 
 
 const ListItem = props => {
@@ -23,11 +23,19 @@ const MealDetailScreen = (props) => {
 
   const selectedMeal = availableMeals.find((meal) => meal.id === mealId);
 
+  const dispatch = useDispatch();
+
+  const toggleFavoriteHandler = useCallback(() => {
+    dispatch(toggleFavorite(mealId));
+  }, [dispatch, mealId]);
+
   // When selectedMeal changes the updated information is sent to the header
-  /*  useEffect(() => {
-     props.navigation.setParams({ mealTitle: selectedMeal });
- 
-   }, [selectedMeal]); */
+  useEffect(() => {
+    // props.navigation.setParams({ mealTitle: selectedMeal });
+    props.navigation.setParams({ toggleFavs: toggleFavoriteHandler });
+  }, [selectedMeal]);
+
+
 
   return (
     <ScrollView>
@@ -52,10 +60,10 @@ const MealDetailScreen = (props) => {
 };
 
 MealDetailScreen.navigationOptions = (navigationData) => {
-  const mealId = navigationData.navigation.getParam('mealId');
+  //const mealId = navigationData.navigation.getParam('mealId');
 
   const mealTitle = navigationData.navigation.getParam('mealTitle');
-
+  const toggleFavorite = navigationData.navigation.getParam('toggleFavs');
   //const selectedMeal = meal.find((meal) => meal.id === mealId);
 
   return {
@@ -65,9 +73,7 @@ MealDetailScreen.navigationOptions = (navigationData) => {
         <Item
           title="Favourite"
           iconName="ios-star"
-          onPress={() => {
-            console.log('Mark as fav');
-          }}
+          onPress={toggleFavorite}
         />
 
       </HeaderButtons>
